@@ -6,7 +6,28 @@ export class User {
     id: number;
 
     @Column({ length: 25})
-    fullName: string;
+    firstName: string;
+
+    @Column({ length: 25})
+    lastName: string;
+
+    @Column()
+    email: string;
+
+    @Column()
+    phoneNumber: string;
+
+    @Column()
+    userName: string;
+
+    @Column()
+    profilePictureUrl: string;
+
+    @Column()
+    bio: string;
+
+    @Column()
+    password: string;
 
     @Column('date')
     birthday: Date;
