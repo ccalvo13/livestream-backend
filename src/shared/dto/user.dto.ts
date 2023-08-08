@@ -1,17 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IsEmail } from "class-validator";
+import { Column, Entity } from "typeorm";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
-
     @Column({ length: 25})
     firstName: string;
 
     @Column({ length: 25})
     lastName: string;
 
-    @Column()
     email: string;
 
     @Column()
@@ -33,5 +30,5 @@ export class User {
     birthday: Date;
 
     @Column()
-    isActive: boolean;
+    status: string;
 }
