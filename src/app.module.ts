@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { MessagesModule } from './messages/messages.module';
 import { ConversationModule } from './conversation/conversation.module';
+import { ChatModule } from './chat/chat.module';
 import ormconfig from "./orm.config";
 
 @Module({
@@ -15,6 +16,7 @@ import ormconfig from "./orm.config";
     AuthModule,
     MessagesModule,
     ConversationModule,
+    ChatModule,
   ],
 })
 export class AppModule {}
