@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { MessagesModule } from './messages/messages.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { ChatModule } from './chat/chat.module';
+import { FilesModule } from './files/files.module';
+import { StorageModule } from './storage/storage.module';
 import ormconfig from "./orm.config";
 
 @Module({
@@ -17,6 +19,8 @@ import ormconfig from "./orm.config";
     MessagesModule,
     ConversationModule,
     ChatModule,
+    FilesModule,
+    StorageModule,
   ],
 })
 export class AppModule {}

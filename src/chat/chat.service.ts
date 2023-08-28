@@ -8,8 +8,8 @@ export class ChatService {
   chats: Chat[] = [{name: 'Joe', text: 'Hey'}]
   clientToUser = {};
   
-  identify(name: string, clientId: string) {
-    this.clientToUser[clientId] = name;
+  identify(session: string, clientId: string) {
+    this.clientToUser[clientId] = session;
 
     return Object.values(this.clientToUser);
   }

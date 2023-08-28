@@ -33,10 +33,10 @@ export class ChatGateway {
 
   @SubscribeMessage('join')
   joinRoom(
-    @MessageBody('name') name: string,
+    @MessageBody('sessionId') session: string,
     @ConnectedSocket() client: Socket
   ) {
-    return this.chatService.identify(name, client.id)
+    return this.chatService.identify(session, client.id)
   }
 
   @SubscribeMessage('typing')
