@@ -79,6 +79,7 @@ export class StorageService {
           Object.entries(metadata || {})
         );
         storageFile.contentType = storageFile.metadata.get("contentType");
+        console.log(storageFile)
         return storageFile;
     }
 }

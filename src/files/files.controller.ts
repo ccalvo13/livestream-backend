@@ -26,7 +26,7 @@ export class FilesController {
       "media/" + fileName,
       file.mimetype,
       file.buffer,
-      [{ mediaId: fileName }]
+      [{ fileName: fileName }]
     );
 
     return {
