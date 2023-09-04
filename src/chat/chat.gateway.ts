@@ -39,13 +39,13 @@ export class ChatGateway {
     return this.chatService.identify(session, client.id)
   }
 
-  @SubscribeMessage('typing')
+  @SubscribeMessage('talking')
   async typing(
-    @MessageBody('isTyping') isTyping: boolean,
+    @MessageBody('isTalking') isTalking: boolean,
     @ConnectedSocket() client: Socket
   ) {
-    const name = await this.chatService.getClientName(client.id);
+    const sessionId = await this.chatService.getClientSession(client.id);
 
-    client.broadcast.emit('typing', { name, isTyping });
+    client.broadcast.emit('talking', { sessionId, isTalking });
   }
 }
