@@ -14,6 +14,7 @@ export class ChatService {
   }
 
   getClientSession(clientId: string) {
+    console.log(this.clientToUser)
     return this.clientToUser[clientId];
   }
 

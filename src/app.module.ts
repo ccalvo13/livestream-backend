@@ -9,6 +9,7 @@ import { ChatModule } from './chat/chat.module';
 import { FilesModule } from './files/files.module';
 import { StorageModule } from './storage/storage.module';
 import ormconfig from "./orm.config";
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import ormconfig from "./orm.config";
     ChatModule,
     FilesModule,
     StorageModule,
+    ConfigModule.forRoot()
   ],
 })
 export class AppModule {}
