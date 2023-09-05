@@ -1,8 +1,8 @@
 const StorageConfig = {
-    projectId: process.env.PROJECT_ID,
-    private_key: process.env.PRIVATE_KEY,
-    client_email: process.env.CLIENT_EMAIL,
-    mediaBucket: process.env.STORAGE_MEDIA_BUCKET,
+    projectId: "lhr-livestream-app",
+    private_key: "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCtaBcYwwypUAzD\nM9bgPCv8t2rRBN9yLx8za2+nsmcWrr4DCvWsBd8R7vqRFevAwfyBmw7DFchztb8b\nrla2ErBI4bcBiSLNmcMQGN81LruNunRp0WUsat9ZiLMD5eguH2fCh2zEaIFyPXga\nwA2Q2mlBtZC0aoGqICGZtrijCDjahl9djvOd4PQtzZEi7Co/bdsRJxoLiMd8lXet\nH3bWWoVviGc+HPUm8GHcMF1y8awxqFWy/HnAGAMX31bIeSJ3zjktGCyRv33ePEXz\nIxQ6EzA60OSQ+u5NWpSK6bDzSv0aCLL33aOSumyesSKuU3uBPjR+nIC3CJBxunpg\nSNnyf/hfAgMBAAECggEAF9lgj9XHqIOrda9sBqQP8q5xQPUYHDax5lsI3LoTJpH6\n7SU1O6cFEozZJloq9fRYG6UtRxR4YL2m3pJAN8NjPmrYxhvLzxYuN0kMbd6TCf+S\nYjlb3luGg2RjJo6Yu7szBJSml26+Gu2sVpWCaCE558EmeUHKupC3vlHcnAOV+ivV\nxKNBWLoJ7Fwli7lj8N7sf1IB0d0yW3CuQmcfo+0Qt8aNGv2eFuGKXWIDb0Wdzx1U\nzk3BnBkig9hVVnL4kMTqXSj0ekzPtiQtqNdXG3+LYCEzJLf4JTLpBSl+xPll9KN6\n73WVcoz6opfVMWifWuC21VCL7ZFQ+tjqwmAOFrQ/UQKBgQDmF9F2YwALovn0jEfH\nBXJ/xdSQ7FzWQ+RJeUEgKnGieXYjpnhODZnWYoiF7UO7K2V76C3a0Jk1/NAbiBhF\nkRJ3FauHmCF85TDPQKK0eGqmhT3NDv57LM+/uFAd0Lzoj5FNM1yo8Vn+G3OCp+IA\nSLpkSnTzWXTeINSwqae4P1DZkQKBgQDA7ljZAtStV252EKThRDXanN0s3K62Vy4v\nfhX5/rH7UgAeXtyPOi5dClaL+rjU0JsngpC1EI/z45Svv3B/aOnvj4p6BjSIgfzF\neB8ZZT+nTI5/RrVSOAPNgdMayHWoGgLZNWaNwyYIP/GHR8IxHs8r7TlsnW55flRL\n5i3rrBo67wKBgQDhja+zkdDVl2nXpDwoiNp5DoEVn95R3DPJIqgI1BKY5uA8ik+c\nlBCd6/FQ+AlRTXUqRavNuHa4SZ/nnT3N1Cx5uDBxt1v8ht+WCxJ0PyatHig6/9vO\n+1qb4h4HXDwS7cnOF+9ZXV6OjnJpPhF5ndG5xpNmiebaaOyWUXksUET9QQJ/Po0I\nQVOpoIm4Ro8e5eo3i6lQDDuAaZ3aW4uFlIf/LHxpjW80EzvJzGCNrtSbGGSJ6UVr\npUi5Y1ll25U15Bkfv4vKWcWpQpjiWyOW8aTh/lvT13AVWZLPqNFuoEBd5SKJyeKG\nXW/n5MTWigW58DMM+DDxbUWdi8ZpjjISsVYbKwKBgCrAjLRG8q5jxLpg7NaEi/6+\nZ0ZOktmG5UIdduvZRXNGrr+3dTzVmTNuKFpp8Bj+kEVxnvgay+0gmcTWWlr2oCdQ\nX6GmArZf/JCOs6XBL1cOXM4ftv2FRlwkRWTwsXIQLAHcng1Ix2eyZeW/FX6YHSun\n25eyEaR7ZafRKxF8ZlJl\n-----END PRIVATE KEY-----\n",
+    client_email: "livestream-server@lhr-livestream-app.iam.gserviceaccount.com",
+    mediaBucket: "livestream-app",
 };
 
 export default StorageConfig;
