@@ -9,15 +9,17 @@ export class StorageService {
     private bucket: string;
 
     constructor() {
+      const storageConfig = StorageConfig();
+      console.log('storage config', storageConfig);
         this.storage = new Storage({
-          projectId: StorageConfig.projectId,
+          projectId: storageConfig.projectId,
           credentials: {
-            client_email: StorageConfig.client_email,
-            private_key: StorageConfig.private_key,
+            client_email: storageConfig.client_email,
+            private_key: storageConfig.private_key,
           },
         });
     
-        this.bucket = StorageConfig.mediaBucket;
+        this.bucket = storageConfig.mediaBucket;
     }
 
     async save(
