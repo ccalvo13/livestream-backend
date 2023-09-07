@@ -40,10 +40,6 @@ export class FilesController {
 
   @Get()
   async downloadMedia(@Body("fileName") fileName: string, @Res() res: Response) {
-    console.log('Storage Bucket Name', process.env.STORAGE_MEDIA_BUCKET);
-    console.log('Project Id', process.env.PROJECT_ID);
-    console.log('Port', process.env.PORT);
-    console.log('database', process.env.DATABASE_URL);
     let storageFile: StorageFile;
     try {
       storageFile = await this.storageService.getWithMetaData("media/" + fileName);

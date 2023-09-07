@@ -1,4 +1,4 @@
 export class Chat {
-    name: string;
-    text: string;
+    roomId: string;
+    sessionId: string;
 }

@@ -10,7 +10,6 @@ export class StorageService {
 
     constructor() {
       const storageConfig = StorageConfig();
-      console.log('storage config', storageConfig);
         this.storage = new Storage({
           projectId: storageConfig.projectId,
           credentials: {

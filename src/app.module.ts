@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot(ormconfig),
+    TypeOrmModule.forRoot(ormconfig),
     ChatModule,
     FilesModule,
     StorageModule,
