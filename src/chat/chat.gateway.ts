@@ -15,13 +15,12 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('join')
-  joinRoom(
-    @MessageBody('sessionId') session: string,
+  async joinRoom(
     @MessageBody('roomId') roomId: string,
+    @MessageBody('sessionId') sessionId: string,
     @ConnectedSocket() client: Socket
   ) {
-    console.log('socket', client)
-    return this.chatService.identify(roomId, session, client.id)
+    return this.chatService.createRoom(roomId, sessionId, client.id)
   }
 
   @SubscribeMessage('talking')

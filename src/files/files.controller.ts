@@ -22,13 +22,17 @@ export class FilesController {
     @UploadedFile() file: Express.Multer.File,
     @Body("fileName") fileName: string
   ) {
-    await this.storageService.save(
-      "media/" + fileName,
-      file.mimetype,
-      file.buffer,
-      [{ fileName: fileName }]
-    );
-
+    try {
+      await this.storageService.save(
+        "media/" + fileName,
+        file.mimetype,
+        file.buffer,
+        [{ fileName: fileName }]
+      );
+    } catch (e) {
+      throw e
+    }
+  
     return {
       "message": "File saved successfully",
       "data": {
