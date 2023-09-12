@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Res, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Res, NotFoundException, ServiceUnavailableException, Query } from '@nestjs/common';
 import { StorageService } from 'src/storage/storage.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageFile } from 'src/storage/storage-file';
@@ -43,7 +43,7 @@ export class FilesController {
   }
 
   @Get()
-  async downloadMedia(@Body("fileName") fileName: string, @Res() res: Response) {
+  async downloadMedia(@Query("fileName") fileName: string, @Res() res: Response) {
     let storageFile: StorageFile;
     try {
       storageFile = await this.storageService.getWithMetaData("media/" + fileName);
