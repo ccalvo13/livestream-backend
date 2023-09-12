@@ -1,4 +1,13 @@
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
 export class Chat {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
     roomId: string;
-    name: string;
+
+    @Column()
+    sessionId: string;
 }

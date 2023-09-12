@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Chat } from './entities/chat.entity';
-import { Prisma } from '@prisma/client';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class ChatService {
-  constructor(private prisma: PrismaService) {}
+export class ChatService extends PrismaClient implements OnModuleInit {
+  constructor() {
+    super()
+  }
   clientToUser = {};
+
+  onModuleInit() {
+    this.$connect();
+  }
   
   identify(roomdId: string, sessionId: string, clientId: string) {
     this.clientToUser[clientId] = sessionId;
@@ -22,7 +26,7 @@ export class ChatService {
   async getClientList(roomId: string) {
     let clientList: {};
     try {
-      clientList = await this.prisma.chat.findMany({
+      clientList = await this.chat.findMany({
         where: {
             roomId
         }
@@ -38,7 +42,7 @@ export class ChatService {
     this.identify(roomId, sessionId, clientId);
 
     try {
-      await this.prisma.chat.create({
+      await this.chat.create({
         data: {
             roomId,
             sessionId
@@ -54,7 +58,7 @@ export class ChatService {
   }
 
   async countRoom(roomId: string) {
-    const count = await this.prisma.chat.count({
+    const count = await this.chat.count({
       where: {
         roomId: roomId,
       },

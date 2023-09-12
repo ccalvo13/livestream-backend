@@ -5,14 +5,17 @@ import { FilesModule } from './files/files.module';
 import { StorageModule } from './storage/storage.module';
 import ormconfig from "./orm.config";
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(ormconfig),
+    // DatabaseModule,
+    // TypeOrmModule.forRoot(ormconfig),
     ChatModule,
     FilesModule,
     StorageModule,
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
   ],
+  controllers: [AppController]
 })
 export class AppModule {}

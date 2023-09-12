@@ -1,4 +1,5 @@
 import { DataSourceOptions } from "typeorm";
+import { Chat } from "./chat/entities/chat.entity";
 
 const config: DataSourceOptions = {
   type: "mysql",
@@ -7,7 +8,10 @@ const config: DataSourceOptions = {
   username: "root",
   password: "P@ssword01",
   database: "livestream",
-  entities: ["dist/**/*.entity{.ts,.js}"],
+  entities: [Chat],
   synchronize: true,
+  extra: {
+    connectionTimeoutMillis: 5000, // Set the connection timeout to 5 seconds
+  },
 };
 export default config;
