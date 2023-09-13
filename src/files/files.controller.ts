@@ -43,10 +43,10 @@ export class FilesController {
   }
 
   @Get()
-  async downloadMedia(@Query("fileName") fileName: string, @Res() res: Response) {
+  async downloadMedia(@Query('filename') filename: string, @Res() res: Response) {
     let storageFile: StorageFile;
     try {
-      storageFile = await this.storageService.getWithMetaData("media/" + fileName);
+      storageFile = await this.storageService.getWithMetaData("media/" + filename);
     } catch (e) {
       if (e.message.toString().includes("No such object")) {
         throw new NotFoundException("image not found");
