@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Query } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 
 @Controller('users')
@@ -10,8 +10,8 @@ export class ChatController {
         return this.chatService.getClientList(roomId);
     }
 
-    @Delete('list/:roomId')
-    deleteClient(@Param('roomId') roomId: string) {
-        return this.chatService.deleteRoom(roomId);
+    @Delete('list/:roomId/:sessionId')
+    deleteClient(@Param('roomId') roomId: string, @Param('sessionId') sessionId: string) {
+        return this.chatService.deleteRoom(roomId, sessionId);
     }
 }
