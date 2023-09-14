@@ -63,13 +63,15 @@ export class ChatService extends PrismaClient implements OnModuleInit {
 
   async deleteRoom(roomId: string) {
     try {
-      // await this.chat.delete({
-      //     where: {
-      //       roomId
-      //     }
-      // });
+      await this.chat.deleteMany({
+          where: {
+            roomId
+          }
+      });
+      
+      return "Deleted successfully";
     } catch (e) {
-
+      throw e;
     }
   }
 }
