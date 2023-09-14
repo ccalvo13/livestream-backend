@@ -24,7 +24,7 @@ export class ChatService extends PrismaClient implements OnModuleInit {
   }
 
   async getClientList(roomId: string) {
-    let clientList: {};
+    let clientList: any;
     try {
       clientList = await this.chat.findMany({
         where: {
@@ -35,7 +35,11 @@ export class ChatService extends PrismaClient implements OnModuleInit {
       throw e
     }
 
-    return clientList;
+    return {
+      message: "Users list retrieved successfully",
+      data: clientList,
+      count: clientList.length,
+    }
   }
 
   async createRoom(roomId: string, sessionId: string, clientId: string) {
@@ -57,13 +61,15 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async countRoom(roomId: string) {
-    const count = await this.chat.count({
-      where: {
-        roomId: roomId,
-      },
-    });
-  
-    return count;
+  async deleteRoom(roomId: string) {
+    try {
+      // await this.chat.delete({
+      //     where: {
+      //       roomId
+      //     }
+      // });
+    } catch (e) {
+
+    }
   }
 }
