@@ -1,12 +1,12 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 
-@Controller('chat')
-export class AppController {
+@Controller('users')
+export class ChatController {
     constructor(private chatService: ChatService) {}
 
-    @Get()
-    getClientList(roomId: string) {
+    @Get('list/:roomId')
+    getClientList(@Param('roomId') roomId: string) {
         return this.chatService.getClientList(roomId);
     }
 }

@@ -19,6 +19,8 @@ export class StorageService {
         });
     
         this.bucket = storageConfig.mediaBucket;
+
+        console.log('storage config: ', storageConfig);
     }
 
     async save(
