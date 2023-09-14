@@ -57,7 +57,7 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     }
 
     return {
-      "message": sessionId + " joined the room"
+      message: sessionId + " joined the room"
     }
   }
 
@@ -69,7 +69,9 @@ export class ChatService extends PrismaClient implements OnModuleInit {
           }
       });
       
-      return "Deleted successfully";
+      return {
+        message: "Deleted successfully"
+      };
     } catch (e) {
       throw e;
     }
