@@ -68,13 +68,16 @@ export class StorageService {
     }
     
     async getWithMetaData(path: string): Promise<StorageFile> {
+      console.log('path', path);
         const [bucketObj] = await this.storage.bucket(this.bucket).file(path).getMetadata();
         const {metadata} = bucketObj;
+        console.log('metadata', metadata);
         const fileResponse: DownloadResponse = await this.storage
           .bucket(this.bucket)
           .file(path)
           .download();
         const [buffer] = fileResponse;
+        console.log('file response', fileResponse)
     
         const storageFile = new StorageFile();
         storageFile.buffer = buffer;

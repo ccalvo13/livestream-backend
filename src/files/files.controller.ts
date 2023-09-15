@@ -42,8 +42,8 @@ export class FilesController {
     }
   }
 
-  @Get()
-  async downloadMedia(@Query('filename') filename: string, @Res() res: Response) {
+  @Get(':filename')
+  async downloadMedia(@Param('filename') filename: string, @Res() res: Response) {
     let storageFile: StorageFile;
     console.log('fileName', filename);
     try {
