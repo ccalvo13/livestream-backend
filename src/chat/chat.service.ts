@@ -7,12 +7,13 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     super()
   }
   clientToUser = {};
+  users = [];
 
   onModuleInit() {
     this.$connect();
   }
   
-  identify(roomdId: string, sessionId: string, clientId: string) {
+  identify(roomId: string, sessionId: string, clientId: string) {
     this.clientToUser[clientId] = sessionId;
 
     return Object.values(this.clientToUser);
@@ -24,22 +25,9 @@ export class ChatService extends PrismaClient implements OnModuleInit {
   }
 
   async getClientList(roomId: string) {
-    let clientList: any;
-    try {
-      clientList = await this.chat.findMany({
-        where: {
-            roomId
-        }
-      })
-    } catch (e) {
-      throw e
-    }
+    this.users = await this.users.filter(user => user.roomId === roomId);
 
-    return {
-      message: "Users list retrieved successfully",
-      data: clientList,
-      count: clientList.length,
-    }
+    return this.users;
   }
 
   async createRoom(roomId: string, sessionId: string, clientId: string) {
@@ -52,12 +40,20 @@ export class ChatService extends PrismaClient implements OnModuleInit {
             sessionId
         }
       });
+
+      const user = {
+        sessionId: sessionId,
+        roomId: roomId,
+      };
+      
+      this.users.push(user);
     } catch (e) {
       throw e
     }
 
     return {
-      message: sessionId + " joined the room"
+      message: sessionId + " joined the room",
+      sessionId: sessionId,
     }
   }
 
@@ -69,6 +65,8 @@ export class ChatService extends PrismaClient implements OnModuleInit {
             sessionId
           }
       });
+
+      this.users = await this.users.filter(user => user.sessionId !== sessionId && user.roomId !== roomId);
       
       return {
         message: "Deleted successfully"
