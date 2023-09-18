@@ -19,8 +19,7 @@ export class StorageService {
         });
     
         this.bucket = storageConfig.mediaBucket;
-
-        console.log('storage config: ', storageConfig);
+        console.log(storageConfig);
     }
 
     async save(
@@ -68,16 +67,13 @@ export class StorageService {
     }
     
     async getWithMetaData(path: string): Promise<StorageFile> {
-      console.log('path', path);
         const [bucketObj] = await this.storage.bucket(this.bucket).file(path).getMetadata();
         const {metadata} = bucketObj;
-        console.log('metadata', metadata);
         const fileResponse: DownloadResponse = await this.storage
           .bucket(this.bucket)
           .file(path)
           .download();
         const [buffer] = fileResponse;
-        console.log('file response', fileResponse)
     
         const storageFile = new StorageFile();
         storageFile.buffer = buffer;
@@ -85,7 +81,18 @@ export class StorageService {
           Object.entries(metadata || {})
         );
         storageFile.contentType = storageFile.metadata.get("contentType");
-        console.log(storageFile)
         return storageFile;
+    }
+
+    async checkConnection() {
+      try {
+        const [buckets] = await this.storage.getBuckets();
+        console.log('Connected to Google Cloud Storage');
+        console.log('Buckets:', buckets);
+        return true;
+      } catch (error) {
+        console.error('Error connecting to Google Cloud Storage:', error);
+        return false;
+      }
     }
 }

@@ -46,6 +46,7 @@ export class FilesController {
   async downloadMedia(@Param('filename') filename: string, @Res() res: Response) {
     let storageFile: StorageFile;
     console.log('fileName', filename);
+    await this.storageService.checkConnection();
     try {
       storageFile = await this.storageService.getWithMetaData("media/" + filename);
       console.log('storageFile', storageFile);
