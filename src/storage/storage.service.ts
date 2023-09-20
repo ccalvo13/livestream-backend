@@ -19,7 +19,6 @@ export class StorageService {
         });
     
         this.bucket = storageConfig.mediaBucket;
-        console.log(storageConfig);
     }
 
     async save(
@@ -87,8 +86,6 @@ export class StorageService {
     async checkConnection() {
       try {
         const [buckets] = await this.storage.getBuckets();
-        console.log('Connected to Google Cloud Storage');
-        console.log('Buckets:', buckets);
         return true;
       } catch (error) {
         console.error('Error connecting to Google Cloud Storage:', error);

@@ -20,9 +20,18 @@ export class ChatGateway {
     @MessageBody('sessionId') sessionId: string,
     @ConnectedSocket() client: Socket
   ) {
-    await this.chatService.createRoom(roomId, sessionId, client.id);
+    const count = await this.chatService.countRoom(roomId);
+    let isHost;
 
-    client.broadcast.emit('join', { sessionId });
+    if(count <= 0) {
+      isHost = true;  
+    } else {
+      isHost = false;
+    }
+
+    await this.chatService.createRoom(roomId, sessionId, isHost, client.id);
+
+    client.broadcast.emit('join', { sessionId, isHost });
   }
 
   @SubscribeMessage('talking')

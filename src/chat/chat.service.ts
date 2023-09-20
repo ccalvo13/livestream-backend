@@ -20,7 +20,6 @@ export class ChatService extends PrismaClient implements OnModuleInit {
   }
 
   getClientSession(clientId: string) {
-    console.log(this.clientToUser)
     return this.clientToUser[clientId];
   }
 
@@ -30,20 +29,22 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     return this.users;
   }
 
-  async createRoom(roomId: string, sessionId: string, clientId: string) {
+  async createRoom(roomId: string, sessionId: string, isHost: boolean, clientId: string) {
     this.identify(roomId, sessionId, clientId);
 
     try {
       await this.chat.create({
         data: {
             roomId,
-            sessionId
+            sessionId,
+            isHost
         }
       });
 
       const user = {
         sessionId: sessionId,
         roomId: roomId,
+        isHost,
       };
       
       this.users.push(user);
@@ -57,7 +58,25 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async deleteRoom(roomId: string, sessionId: string) {
+  async deleteRoom(roomId: string) {
+    try {
+      await this.chat.deleteMany({
+          where: {
+            roomId
+          }
+      });
+
+      this.users = await this.users.filter(user => user.roomId !== roomId);
+      
+      return {
+        message: "Call has ended"
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteUser(roomId: string, sessionId: string) {
     try {
       await this.chat.deleteMany({
           where: {
@@ -69,10 +88,20 @@ export class ChatService extends PrismaClient implements OnModuleInit {
       this.users = await this.users.filter(user => user.sessionId !== sessionId && user.roomId !== roomId);
       
       return {
-        message: "Deleted successfully"
+        message: sessionId + " left the room"
       };
     } catch (e) {
       throw e;
     }
+  }
+
+  async countRoom(roomId: string) {
+    const count = await this.chat.count({
+      where: {
+        roomId: roomId,
+      },
+    });
+  
+    return count;
   }
 }

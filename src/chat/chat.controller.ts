@@ -12,6 +12,11 @@ export class ChatController {
 
     @Delete('list/:roomId/:sessionId')
     deleteClient(@Param('roomId') roomId: string, @Param('sessionId') sessionId: string) {
-        return this.chatService.deleteRoom(roomId, sessionId);
+        return this.chatService.deleteUser(roomId, sessionId);
+    }
+
+    @Delete('list/:roomId')
+    deleteRoom(@Param('roomId') roomId: string) {
+        return this.chatService.deleteRoom(roomId);
     }
 }

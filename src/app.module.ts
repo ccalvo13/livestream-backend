@@ -9,8 +9,6 @@ import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    // DatabaseModule,
-    // TypeOrmModule.forRoot(ormconfig),
     ChatModule,
     FilesModule,
     StorageModule,
