@@ -79,10 +79,6 @@ export class ChatService extends PrismaClient implements OnModuleInit {
       });
 
       this.users = await this.users.filter(user => user.roomId !== roomId);
-      
-      return {
-        message: "Call has ended"
-      };
     } catch (e) {
       throw e;
     }
@@ -98,10 +94,6 @@ export class ChatService extends PrismaClient implements OnModuleInit {
       });
 
       this.users = await this.users.filter(user => user.sessionId !== sessionId && user.roomId !== roomId);
-      
-      return {
-        message: sessionId + " left the room"
-      };
     } catch (e) {
       throw e;
     }
