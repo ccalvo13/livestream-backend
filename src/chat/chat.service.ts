@@ -29,6 +29,18 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     return this.users;
   }
 
+  async getClientInfo(sessionId: string) {
+    const user = await this.chat.findUnique({
+      where: {
+        sessionId
+      }
+    });
+
+    return {
+      data: user
+    }
+  }
+
   async createRoom(roomId: string, sessionId: string, isHost: boolean, clientId: string) {
     this.identify(roomId, sessionId, clientId);
 

@@ -19,4 +19,9 @@ export class ChatController {
     deleteRoom(@Param('roomId') roomId: string) {
         return this.chatService.deleteRoom(roomId);
     }
+
+    @Get(':sessionId')
+    getUser(@Param('sessionId') sessionId: string) {
+        return this.chatService.getClientInfo(sessionId);
+    }
 }
