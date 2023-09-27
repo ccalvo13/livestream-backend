@@ -30,7 +30,7 @@ export class ChatGateway {
 
     await this.chatService.createRoom(roomId, sessionId, isHost, client.id);
 
-    client.broadcast.emit('join', { sessionId, isHost });
+    client.broadcast.emit('join', { roomId, sessionId, isHost });
   }
 
   @SubscribeMessage('talking')
@@ -51,5 +51,22 @@ export class ChatGateway {
     const users = await this.chatService.getClientList(roomId);
 
     client.broadcast.emit('usersList', { users });
+  }
+
+  @SubscribeMessage('deleteUser')
+  async deleteUser(
+    @MessageBody('roomId') roomId: string,
+    @MessageBody('sessionId') sessionId: string,
+    @ConnectedSocket() client: Socket
+  ) {
+    client.broadcast.emit('deleteUser', { roomId, sessionId });
+  }
+
+  @SubscribeMessage('deleteRoom')
+  async deleteRoom(
+    @MessageBody('roomId') roomId: string,
+    @ConnectedSocket() client: Socket
+  ) {
+    client.broadcast.emit('deleteRoom', { roomId });
   }
 }

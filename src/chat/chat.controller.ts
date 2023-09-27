@@ -3,15 +3,8 @@ import { ChatService } from "./chat.service";
 import { ConnectedSocket, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
-@WebSocketGateway({
-    cors: {
-      origin: '*',
-    }
-})
 @Controller('users')
 export class ChatController {
-    @WebSocketServer()
-    server: Server;
 
     constructor(private chatService: ChatService) {}
 
@@ -23,28 +16,19 @@ export class ChatController {
     @Delete('list/:roomId/:sessionId')
     async deleteClient(
         @Param('roomId') roomId: string,
-        @Param('sessionId') sessionId: string,
-        @ConnectedSocket() client: Socket
+        @Param('sessionId') sessionId: string
     ) {
         try {
             await this.chatService.deleteUser(roomId, sessionId);
-            
-            client.emit('deleteUser', {roomId, sessionId});
-      
-            return {
-              message: sessionId + " left the room"
-            };
         } catch (err) {
             throw err;
         }
     }
 
     @Delete('list/:roomId')
-    async deleteRoom(@Param('roomId') roomId: string, @ConnectedSocket() client: Socket) {
+    async deleteRoom(@Param('roomId') roomId: string) {
         try {
             await this.chatService.deleteRoom(roomId);
-            
-            client.emit('deleteRoom', roomId);
       
             return {
               message: "Call has ended"
