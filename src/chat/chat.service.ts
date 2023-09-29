@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { Blob } from 'buffer';
 
 @Injectable()
 export class ChatService extends PrismaClient implements OnModuleInit {

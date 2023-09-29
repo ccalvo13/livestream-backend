@@ -1,17 +1,35 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
+import { Blob } from 'buffer';
+import { StorageService } from 'src/storage/storage.service';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
-  }
+  },
+  maxHttpBufferSize: 4e6,
 })
 export class ChatGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly storageService: StorageService
+  ) {}
+
+  afterInit(server: Server) {
+    console.log('Socket.io server initialized');
+  }
+
+  handleConnection(client: any) {
+    console.log('Client connected:', client.id);
+  }
+
+  handleDisconnect(client: any) {
+    console.log('Client disconnected:', client.id);
+  }
 
   @SubscribeMessage('join')
   async joinRoom(
@@ -68,5 +86,17 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket
   ) {
     client.broadcast.emit('deleteRoom', { roomId });
+  }
+  
+  @SubscribeMessage('record')
+  async record(
+    @MessageBody('roomId') roomId: any,
+    @MessageBody('data') data: any,
+    @ConnectedSocket() client: Socket
+  ) {
+    console.log('chunks', data)
+    await this.storageService.saveChunks(roomId, data);
+
+    // client.broadcast.emit('record', { chunks});
   }
 }

@@ -59,4 +59,17 @@ export class FilesController {
     res.setHeader("Cache-Control", "max-age=60d");
     res.end(storageFile.buffer);
   }
+    
+  @Get('record/get')
+  async getRecord() {
+    await this.storageService.getChunks().then((chunks) => {
+      console.log('chunks: ' + chunks);
+      return chunks;
+    });
+  }
+
+  @Post('record/stop/:roomId')
+  async stopRecord(@Param('roomId') roomId: string) {
+    await this.storageService.stopRecord(roomId);
+  }
 }

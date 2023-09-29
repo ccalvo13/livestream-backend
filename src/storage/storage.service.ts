@@ -3,10 +3,13 @@ import StorageConfig from './storage-config';
 import { StorageFile } from './storage-file';
 import { DownloadResponse, Storage } from '@google-cloud/storage';
 
+const { Blob } = require('node:buffer');
+
 @Injectable()
 export class StorageService {
     private storage: Storage;
     private bucket: string;
+    chunks = {};
 
     constructor() {
       const storageConfig = StorageConfig();
@@ -91,5 +94,31 @@ export class StorageService {
         console.error('Error connecting to Google Cloud Storage:', error);
         return false;
       }
+    }
+  
+    async saveChunks(roomId: string, data: Blob) {
+      if (roomId in this.chunks) {
+        this.chunks[roomId].push(data);
+      } else {
+        this.chunks[roomId] = [data];
+      }
+  
+      console.log('saved chunks', this.chunks)
+      return this.chunks;
+    }
+  
+    async getChunks() {
+      return this.chunks['11113'];
+    }
+
+    async stopRecord(roomId: string) {
+      const blob = new Blob(this.chunks[roomId], { 'type' : 'video/webm' });
+      
+      const file = new File([blob], `${roomId}.webm`, { 'type' : 'video/webm' });
+      let formdata = new FormData();
+      formdata.append('fileName', `${roomId}`);
+      formdata.append('file', file);
+
+      console.log('form data', formdata);
     }
 }
