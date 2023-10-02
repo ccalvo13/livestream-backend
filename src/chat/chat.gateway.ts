@@ -1,7 +1,6 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
-import { Blob } from 'buffer';
 import { StorageService } from 'src/storage/storage.service';
 
 @WebSocketGateway({
@@ -94,9 +93,6 @@ export class ChatGateway {
     @MessageBody('data') data: any,
     @ConnectedSocket() client: Socket
   ) {
-    console.log('chunks', data)
     await this.storageService.saveChunks(roomId, data);
-
-    // client.broadcast.emit('record', { chunks});
   }
 }

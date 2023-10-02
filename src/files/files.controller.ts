@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Res, NotFoundException, ServiceUnavailableException, Query } from '@nestjs/common';
 import { StorageService } from 'src/storage/storage.service';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageFile } from 'src/storage/storage-file';
 import { Response } from 'express';
+import * as fs from 'fs';
 
 @Controller('files')
 export class FilesController {
@@ -11,33 +11,30 @@ export class FilesController {
   ) {}
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor("file", {
-      limits: {
-        files: 1,
-      },
-    })
-  )
   async uploadMedia(
-    @UploadedFile() file: Express.Multer.File,
     @Body("fileName") fileName: string
   ) {
-    try {
-      await this.storageService.save(
-        "media/" + fileName,
-        file.mimetype,
-        file.buffer,
-        [{ fileName: fileName }]
-      );
-    } catch (e) {
-      throw e
-    }
+    const filePath = 'assets/media/' + fileName + '.webm';
+    const fileContent: any = await new Promise((resolve, reject) => {
+      return fs.readFile(filePath, (err, data) => {
+          if (err) {
+              return reject(err);
+          }
+          return resolve(data);
+      });
+    });
+
+    this.storageService.save(
+      fileName + '.webm',
+      "video/webm",
+      fileContent,
+      [{ fileName: fileName }]
+    );
   
     return {
       "message": "File saved successfully",
       "data": {
-        "fileName": fileName,
-        "contentType": file.mimetype,
+        "fileName": fileName + '.webm',
       }
     }
   }
@@ -58,18 +55,5 @@ export class FilesController {
     res.setHeader("Content-Type", storageFile.contentType);
     res.setHeader("Cache-Control", "max-age=60d");
     res.end(storageFile.buffer);
-  }
-    
-  @Get('record/get')
-  async getRecord() {
-    await this.storageService.getChunks().then((chunks) => {
-      console.log('chunks: ' + chunks);
-      return chunks;
-    });
-  }
-
-  @Post('record/stop/:roomId')
-  async stopRecord(@Param('roomId') roomId: string) {
-    await this.storageService.stopRecord(roomId);
   }
 }

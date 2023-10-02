@@ -1,7 +1,5 @@
 import { Controller, Delete, Get, Param, Query } from "@nestjs/common";
 import { ChatService } from "./chat.service";
-import { ConnectedSocket, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server, Socket } from "socket.io";
 
 @Controller('users')
 export class ChatController {

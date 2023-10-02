@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import StorageConfig from './storage-config';
 import { StorageFile } from './storage-file';
 import { DownloadResponse, Storage } from '@google-cloud/storage';
-
-const { Blob } = require('node:buffer');
+import * as fs from 'fs';
 
 @Injectable()
 export class StorageService {
@@ -25,13 +24,14 @@ export class StorageService {
     }
 
     async save(
-        path: string,
+        fileName: string,
         contentType: string,
         media: Buffer,
         metadata: { [key: string]: string }[]
     ) {
+        const filePath = 'media/' + fileName;
         const object = metadata.reduce((obj, item) => Object.assign(obj, item), {});
-        const file = this.storage.bucket(this.bucket).file(path);
+        const file = this.storage.bucket(this.bucket).file(filePath);
         const stream = file.createWriteStream();
         stream.on("finish", async () => {
           return await file.setMetadata({
@@ -42,18 +42,29 @@ export class StorageService {
             },
           });
         });
+        
         stream.on('error', (error) => {
             console.error('stream error', error)
             return error
         });
+
         stream.end(media);
+
+        this.deleteFile('assets/media/' + fileName);
     }
 
-    async delete(path: string) {
-        await this.storage
-          .bucket(this.bucket)
-          .file(path)
-          .delete({ ignoreNotFound: true });
+    async deleteFile(filePath: string) {
+      fs.unlink(filePath, function(err) {
+        if(err && err.code == 'ENOENT') {
+            // file doens't exist
+            return { message: "File doesn't exist, won't remove it." }
+        } else if (err) {
+            // other errors, e.g. maybe we don't have enough permission
+            return { message: "Error occurred while trying to remove file." };
+        } else {
+            return { message: "File removed." };
+        }
+      });
     }
 
     async get(path: string): Promise<StorageFile> {
@@ -96,29 +107,14 @@ export class StorageService {
       }
     }
   
-    async saveChunks(roomId: string, data: Blob) {
-      if (roomId in this.chunks) {
-        this.chunks[roomId].push(data);
-      } else {
-        this.chunks[roomId] = [data];
-      }
-  
-      console.log('saved chunks', this.chunks)
-      return this.chunks;
-    }
-  
-    async getChunks() {
-      return this.chunks['11113'];
-    }
-
-    async stopRecord(roomId: string) {
-      const blob = new Blob(this.chunks[roomId], { 'type' : 'video/webm' });
-      
-      const file = new File([blob], `${roomId}.webm`, { 'type' : 'video/webm' });
-      let formdata = new FormData();
-      formdata.append('fileName', `${roomId}`);
-      formdata.append('file', file);
-
-      console.log('form data', formdata);
+    async saveChunks(roomId: string, data: any) {
+      const filePath = 'assets/media/' + roomId + '.webm';
+      fs.appendFile(filePath, data, (err) => {
+        if (err) {
+          console.error('Error saving data to file:', err);
+        } else {
+          console.log('Data saved to file:', filePath);
+        }
+      });
     }
 }
