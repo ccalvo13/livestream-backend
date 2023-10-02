@@ -14,7 +14,7 @@ export class FilesController {
   async uploadMedia(
     @Body("fileName") fileName: string
   ) {
-    const filePath = 'assets/media/' + fileName + '.webm';
+    const filePath = 'src/assets/media/' + fileName + '.webm';
     const fileContent: any = await new Promise((resolve, reject) => {
       return fs.readFile(filePath, (err, data) => {
           if (err) {

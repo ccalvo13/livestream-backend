@@ -50,7 +50,7 @@ export class StorageService {
 
         stream.end(media);
 
-        this.deleteFile('assets/media/' + fileName);
+        this.deleteFile('src/assets/media/' + fileName);
     }
 
     async deleteFile(filePath: string) {
@@ -108,7 +108,7 @@ export class StorageService {
     }
   
     async saveChunks(roomId: string, data: any) {
-      const filePath = 'assets/media/' + roomId + '.webm';
+      const filePath = 'src/assets/media/' + roomId + '.webm';
       fs.appendFile(filePath, data, (err) => {
         if (err) {
           console.error('Error saving data to file:', err);
