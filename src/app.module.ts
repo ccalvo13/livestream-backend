@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatModule } from './chat/chat.module';
 import { FilesModule } from './files/files.module';
 import { StorageModule } from './storage/storage.module';
-import ormconfig from "./orm.config";
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 
