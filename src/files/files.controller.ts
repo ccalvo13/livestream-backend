@@ -10,7 +10,7 @@ export class FilesController {
     private storageService: StorageService
   ) {}
 
-  @Post()
+  @Post() 
   async uploadMedia(
     @Body("fileName") fileName: string
   ) {
