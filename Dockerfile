@@ -10,6 +10,8 @@ COPY . /usr/src/app
 
 # Run the build command which creates the production bundle
 RUN npm install
+RUN npm i -g prisma
+RUN prisma generate
 RUN npm run build
 
 EXPOSE 3000
