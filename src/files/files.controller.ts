@@ -24,7 +24,7 @@ export class FilesController {
       });
     });
 
-    this.storageService.save(
+    this.storageService.saveS3(
       fileName + '.webm',
       "video/webm",
       fileContent,
@@ -39,21 +39,37 @@ export class FilesController {
     }
   }
 
+  // @Get(':filename')
+  // async downloadMedia(@Param('filename') filename: string, @Res() res: Response) {
+  //   let storageFile: StorageFile;
+  //   await this.storageService.checkConnection();
+  //   try {
+  //     storageFile = await this.storageService.getWithMetaData("media/" + filename);
+  //   } catch (e) {
+  //     if (e.message.toString().includes("No such object")) {
+  //       throw new NotFoundException("image not found");
+  //     } else {
+  //       throw new ServiceUnavailableException("internal error");
+  //     }
+  //   }
+  //   res.setHeader("Content-Type", storageFile.contentType);
+  //   res.setHeader("Cache-Control", "max-age=60d");
+  //   res.end(storageFile.buffer);
+  // }
+
   @Get(':filename')
-  async downloadMedia(@Param('filename') filename: string, @Res() res: Response) {
-    let storageFile: StorageFile;
+  async downloadMediaS3(@Param('filename') filename: string, @Res() res: Response) {
     await this.storageService.checkConnection();
     try {
-      storageFile = await this.storageService.getWithMetaData("media/" + filename);
+      const file = await this.storageService.getS3(filename, res);
+      console.log(file);
+      file.pipe(res);
     } catch (e) {
       if (e.message.toString().includes("No such object")) {
         throw new NotFoundException("image not found");
       } else {
-        throw new ServiceUnavailableException("internal error");
+        throw e;
       }
     }
-    res.setHeader("Content-Type", storageFile.contentType);
-    res.setHeader("Cache-Control", "max-age=60d");
-    res.end(storageFile.buffer);
   }
 }
