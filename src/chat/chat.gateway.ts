@@ -59,9 +59,10 @@ export class ChatGateway {
   @SubscribeMessage('talking')
   async talking(
     @MessageBody('isTalking') isTalking: boolean,
+    @MessageBody('sessionId') sessionId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    const sessionId = await this.chatService.getClientSession(client.id);
+    // const sessionId = await this.chatService.getClientSession(client.id);
 
     client.broadcast.emit('talking', { sessionId, isTalking });
   }
@@ -97,7 +98,6 @@ export class ChatGateway {
   async record(
     @MessageBody('roomId') roomId: any,
     @MessageBody('data') data: any,
-    @ConnectedSocket() client: Socket,
   ) {
     await this.storageService.saveChunks(roomId, data);
   }
@@ -117,28 +117,29 @@ export class ChatGateway {
       creationDate,
     };
     const chats = await this.chatService.createChat(chat);
-
-    console.log('chats', chats);
     client.broadcast.emit('chat', { chats });
+
+    return chats;
   }
 
   @SubscribeMessage('typing')
   async typing(
     @MessageBody('isTyping') isTyping: boolean,
-    @ConnectedSocket() client: Socket,
-  ) {
-    const sessionId = await this.chatService.getClientSession(client.id);
-
-    client.broadcast.emit('typing', { sessionId, isTyping });
-  }
-
-  @SubscribeMessage('findAllChat')
-  async findAllChat(
+    @MessageBody('sessionId') sessionId: string,
     @MessageBody('roomId') roomId: string,
     @ConnectedSocket() client: Socket,
   ) {
+    // const sessionId = await this.chatService.getClientSession(client.id);
+
+    client.broadcast.emit('typing', { sessionId, roomId, isTyping });
+  }
+
+  @SubscribeMessage('findAllChat')
+  async findAllChat(@MessageBody('roomId') roomId: string) {
     const chat = await this.chatService.getChatList(roomId);
 
-    client.broadcast.emit('findAllChat', { chat });
+    console.log('chats', chat);
+
+    return chat;
   }
 }

@@ -56,7 +56,7 @@ export class ChatService extends PrismaClient implements OnModuleInit {
     isHost: boolean,
     clientId: string,
   ) {
-    this.identify(roomId, sessionId, clientId);
+    await this.identify(roomId, sessionId, clientId);
 
     try {
       await this.chat.create({
@@ -140,6 +140,7 @@ export class ChatService extends PrismaClient implements OnModuleInit {
 
       return this.chats;
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }
@@ -150,6 +151,8 @@ export class ChatService extends PrismaClient implements OnModuleInit {
         roomId: roomId,
       },
     });
+
+    this.chats = chat;
 
     return chat;
   }
