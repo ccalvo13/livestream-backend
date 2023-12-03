@@ -1,18 +1,27 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { LiveChat } from './entities/livechat.entity';
 
 @Injectable()
 export class ChatService extends PrismaClient implements OnModuleInit {
   constructor() {
-    super()
+    super();
   }
   clientToUser = {};
   users = [];
+  chats: LiveChat[] = [
+    {
+      roomId: 'test',
+      sessionId: 'test',
+      message: 'test message',
+      creationDate: '12/12/2023',
+    },
+  ];
 
   onModuleInit() {
     this.$connect();
   }
-  
+
   identify(roomId: string, sessionId: string, clientId: string) {
     this.clientToUser[clientId] = sessionId;
 
@@ -24,7 +33,7 @@ export class ChatService extends PrismaClient implements OnModuleInit {
   }
 
   async getClientList(roomId: string) {
-    this.users = await this.users.filter(user => user.roomId === roomId);
+    this.users = await this.users.filter((user) => user.roomId === roomId);
 
     return this.users;
   }
@@ -32,25 +41,30 @@ export class ChatService extends PrismaClient implements OnModuleInit {
   async getClientInfo(sessionId: string) {
     const user = await this.chat.findUnique({
       where: {
-        sessionId
-      }
+        sessionId,
+      },
     });
 
     return {
-      data: user
-    }
+      data: user,
+    };
   }
 
-  async createRoom(roomId: string, sessionId: string, isHost: boolean, clientId: string) {
+  async createRoom(
+    roomId: string,
+    sessionId: string,
+    isHost: boolean,
+    clientId: string,
+  ) {
     this.identify(roomId, sessionId, clientId);
 
     try {
       await this.chat.create({
         data: {
-            roomId,
-            sessionId,
-            isHost
-        }
+          roomId,
+          sessionId,
+          isHost,
+        },
       });
 
       const user = {
@@ -58,27 +72,27 @@ export class ChatService extends PrismaClient implements OnModuleInit {
         roomId: roomId,
         isHost,
       };
-      
+
       this.users.push(user);
     } catch (e) {
-      throw e
+      throw e;
     }
 
     return {
-      message: sessionId + " joined the room",
+      message: sessionId + ' joined the room',
       sessionId: sessionId,
-    }
+    };
   }
 
   async deleteRoom(roomId: string) {
     try {
       await this.chat.deleteMany({
-          where: {
-            roomId
-          }
+        where: {
+          roomId,
+        },
       });
 
-      this.users = await this.users.filter(user => user.roomId !== roomId);
+      this.users = await this.users.filter((user) => user.roomId !== roomId);
     } catch (e) {
       throw e;
     }
@@ -87,16 +101,18 @@ export class ChatService extends PrismaClient implements OnModuleInit {
   async deleteUser(roomId: string, sessionId: string) {
     try {
       await this.chat.deleteMany({
-          where: {
-            roomId,
-            sessionId
-          }
+        where: {
+          roomId,
+          sessionId,
+        },
       });
 
-      this.users = await this.users.filter(user => user.sessionId !== sessionId && user.roomId !== roomId);
-      
+      this.users = await this.users.filter(
+        (user) => user.sessionId !== sessionId && user.roomId !== roomId,
+      );
+
       return {
-        message: sessionId + " left the room"
+        message: sessionId + ' left the room',
       };
     } catch (e) {
       throw e;
@@ -109,7 +125,32 @@ export class ChatService extends PrismaClient implements OnModuleInit {
         roomId: roomId,
       },
     });
-  
+
     return count;
+  }
+
+  async createChat(chat: LiveChat) {
+    console.log('chat', chat);
+    try {
+      await this.conversation.create({
+        data: chat,
+      });
+
+      this.chats.push(chat);
+
+      return this.chats;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getChatList(roomId: string) {
+    const chat = await this.conversation.findMany({
+      where: {
+        roomId: roomId,
+      },
+    });
+
+    return chat;
   }
 }

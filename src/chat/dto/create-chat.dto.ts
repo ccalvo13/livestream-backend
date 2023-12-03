@@ -1,3 +1,3 @@
-import { Chat } from "../entities/chat.entity";
+import { VideoChat } from '../entities/videochat.entity';
 
-export class CreateChatDto extends Chat {}
+export class CreateChatDto extends VideoChat {}

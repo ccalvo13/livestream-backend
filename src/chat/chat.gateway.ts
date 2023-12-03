@@ -1,4 +1,10 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  WebSocketServer,
+  ConnectedSocket,
+} from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
 import { StorageService } from 'src/storage/storage.service';
@@ -15,7 +21,7 @@ export class ChatGateway {
 
   constructor(
     private readonly chatService: ChatService,
-    private readonly storageService: StorageService
+    private readonly storageService: StorageService,
   ) {}
 
   afterInit(server: Server) {
@@ -34,13 +40,13 @@ export class ChatGateway {
   async joinRoom(
     @MessageBody('roomId') roomId: string,
     @MessageBody('sessionId') sessionId: string,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     const count = await this.chatService.countRoom(roomId);
     let isHost;
 
-    if(count <= 0) {
-      isHost = true;  
+    if (count <= 0) {
+      isHost = true;
     } else {
       isHost = false;
     }
@@ -51,9 +57,9 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('talking')
-  async typing(
+  async talking(
     @MessageBody('isTalking') isTalking: boolean,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     const sessionId = await this.chatService.getClientSession(client.id);
 
@@ -63,7 +69,7 @@ export class ChatGateway {
   @SubscribeMessage('usersList')
   async getUsers(
     @MessageBody('roomId') roomId: string,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     const users = await this.chatService.getClientList(roomId);
 
@@ -74,7 +80,7 @@ export class ChatGateway {
   async deleteUser(
     @MessageBody('roomId') roomId: string,
     @MessageBody('sessionId') sessionId: string,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     client.broadcast.emit('deleteUser', { roomId, sessionId });
   }
@@ -82,17 +88,57 @@ export class ChatGateway {
   @SubscribeMessage('deleteRoom')
   async deleteRoom(
     @MessageBody('roomId') roomId: string,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     client.broadcast.emit('deleteRoom', { roomId });
   }
-  
+
   @SubscribeMessage('record')
   async record(
     @MessageBody('roomId') roomId: any,
     @MessageBody('data') data: any,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     await this.storageService.saveChunks(roomId, data);
+  }
+
+  @SubscribeMessage('chat')
+  async chat(
+    @MessageBody('roomId') roomId: any,
+    @MessageBody('sessionId') sessionId: any,
+    @MessageBody('message') message: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const creationDate = new Date();
+    const chat = {
+      roomId,
+      sessionId,
+      message,
+      creationDate,
+    };
+    const chats = await this.chatService.createChat(chat);
+
+    console.log('chats', chats);
+    client.broadcast.emit('chat', { chats });
+  }
+
+  @SubscribeMessage('typing')
+  async typing(
+    @MessageBody('isTyping') isTyping: boolean,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const sessionId = await this.chatService.getClientSession(client.id);
+
+    client.broadcast.emit('typing', { sessionId, isTyping });
+  }
+
+  @SubscribeMessage('findAllChat')
+  async findAllChat(
+    @MessageBody('roomId') roomId: string,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const chat = await this.chatService.getChatList(roomId);
+
+    client.broadcast.emit('findAllChat', { chat });
   }
 }

@@ -16,3 +16,11 @@ model Chat {
   sessionId String @unique
   isHost Boolean @default(false)
 }
+
+model Conversation {
+  id  Int      @id @default(autoincrement())
+  roomId String
+  sessionId String
+  message String
+  creationDate DateTime @default(now())
+}
