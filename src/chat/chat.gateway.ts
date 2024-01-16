@@ -142,4 +142,26 @@ export class ChatGateway {
 
     return chat;
   }
+
+  @SubscribeMessage('requestHuman')
+  async requestHuman(
+    @MessageBody('chat_session') chat_session: string,
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.broadcast.emit('requestHuman', { chat_session });
+  }
+
+  @SubscribeMessage('humanRequestResponse')
+  async humanRequestResponse(
+    @MessageBody('chat_session') chat_session: string,
+    @MessageBody('agent') agent: string,
+    @MessageBody('isApproved') isApproved: boolean,
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.broadcast.emit('humanRequestResponse', {
+      chat_session,
+      agent,
+      isApproved,
+    });
+  }
 }
